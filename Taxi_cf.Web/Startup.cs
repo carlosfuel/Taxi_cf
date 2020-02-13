@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Taxi_cf.Web.Data;
 
 namespace Taxi_cf.Web
 {
@@ -31,6 +33,13 @@ namespace Taxi_cf.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //-----------------------------------------------------------Cf-----------
+            services.AddDbContext<DataContext>(cfg =>
+            {
+                cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            //-------------------------------------------------------------------------
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
