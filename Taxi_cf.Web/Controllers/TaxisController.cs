@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Taxi_cf.Web.Data;
 using Taxi_cf.Web.Data.Entities;
 
@@ -33,8 +30,9 @@ namespace Taxi_cf.Web.Controllers
                 return NotFound();
             }
 
-            var taxiEntity = await _context.Taxis
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var taxiEntity = await _context.Taxis
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            TaxiEntity taxiEntity = await _context.Taxis.FindAsync(id);
             if (taxiEntity == null)
             {
                 return NotFound();
@@ -48,7 +46,7 @@ namespace Taxi_cf.Web.Controllers
         {
             return View();
         }
-                
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TaxiEntity taxiEntity)
@@ -71,7 +69,7 @@ namespace Taxi_cf.Web.Controllers
                 return NotFound();
             }
 
-            var taxiEntity = await _context.Taxis.FindAsync(id);
+            TaxiEntity taxiEntity = await _context.Taxis.FindAsync(id);
             if (taxiEntity == null)
             {
                 return NotFound();
@@ -79,12 +77,9 @@ namespace Taxi_cf.Web.Controllers
             return View(taxiEntity);
         }
 
-        // POST: Taxis/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Plaque")] TaxiEntity taxiEntity)
+        public async Task<IActionResult> Edit(int id, TaxiEntity taxiEntity)
         {
             if (id != taxiEntity.Id)
             {
@@ -93,24 +88,12 @@ namespace Taxi_cf.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(taxiEntity);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaxiEntityExists(taxiEntity.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                taxiEntity.Plaque = taxiEntity.Plaque.ToUpper(); //Convierte a Mayusculas
+                _context.Update(taxiEntity);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(taxiEntity);
         }
 
@@ -122,30 +105,17 @@ namespace Taxi_cf.Web.Controllers
                 return NotFound();
             }
 
-            var taxiEntity = await _context.Taxis
-                .FirstOrDefaultAsync(m => m.Id == id);
+            TaxiEntity taxiEntity = await _context.Taxis.FindAsync(id);
+
             if (taxiEntity == null)
             {
                 return NotFound();
             }
 
-            return View(taxiEntity);
-        }
-
-        // POST: Taxis/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var taxiEntity = await _context.Taxis.FindAsync(id);
             _context.Taxis.Remove(taxiEntity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool TaxiEntityExists(int id)
-        {
-            return _context.Taxis.Any(e => e.Id == id);
-        }
+        
     }
 }
