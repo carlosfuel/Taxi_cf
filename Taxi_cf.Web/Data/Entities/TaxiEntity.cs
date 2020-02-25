@@ -12,11 +12,14 @@ namespace Taxi_cf.Web.Data.Entities
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public string Plaque { get; set; }
         
-        //Relaciones de la tabla Taxi
+        //Relaciones de la tabla Taxi -------------------------------------------
+
         public ICollection<TripEntity> Trips { get; set; }
 
         public ICollection<TripDetailEntity> TripDetails { get; set; }
 
+        public UserEntity User { get; set; }
 
+        //------------------------------------------------------------------------
     }
 }

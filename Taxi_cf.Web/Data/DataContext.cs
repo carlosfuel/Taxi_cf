@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Taxi_cf.Web.Data.Entities;
 
 namespace Taxi_cf.Web.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<UserEntity>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -15,6 +16,8 @@ namespace Taxi_cf.Web.Data
 
         public DbSet<TripDetailEntity> TripDetails { get; set; }
 
+        public DbSet<UserGroupEntity> UserGroups { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -22,6 +25,5 @@ namespace Taxi_cf.Web.Data
                 .HasIndex(t => t.Plaque)
                 .IsUnique();
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Taxi_cf.Web.Data.Entities
@@ -44,8 +45,16 @@ namespace Taxi_cf.Web.Data.Entities
         public double TargetLongitude { get; set; }
 
         public string Remarks { get; set; }
+        
+        //--------------------------------------------
 
         public TaxiEntity Taxi { get; set; }
+
+        public ICollection<TripDetailEntity> TripDetails {get; set; }
+
+        public UserEntity User { get; set; }
+
+        //---------------------------------------------
     }
 
 }
