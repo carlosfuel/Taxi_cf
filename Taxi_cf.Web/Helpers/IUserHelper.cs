@@ -4,7 +4,7 @@ using Taxi_cf.Web.Data.Entities;
 
 namespace Taxi_cf.Web.Helpers
 {
-    internal interface IUserHelper
+    public interface IUserHelper
     {
         Task<UserEntity> GetUserByEmailAsync(string email);
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
 using System.Threading.Tasks;
 using Taxi_cf.Web.Data.Entities;
 
@@ -18,29 +17,36 @@ namespace Taxi_cf.Web.Helpers
             _roleManager = roleManager;
         }
 
-        public Task<IdentityResult> AddUserAsync(UserEntity user, string password)
+        public async Task<IdentityResult> AddUserAsync(UserEntity user, string password)
         {
-            throw new NotImplementedException();
+            return await _userManager.CreateAsync(user, password);
         }
 
-        public Task AddUserToRoleAsync(UserEntity user, string roleName)
+        public async Task AddUserToRoleAsync(UserEntity user, string roleName)
         {
-            throw new NotImplementedException();
+            await _userManager.AddToRoleAsync(user, roleName);
         }
 
-        public Task CheckRoleAsync(string roleName)
+        public async Task CheckRoleAsync(string roleName)
         {
-            throw new NotImplementedException();
+            bool roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole
+                {
+                    Name = roleName
+                });
+            }
         }
 
-        public Task<UserEntity> GetUserByEmailAsync(string email)
+        public async Task<UserEntity> GetUserByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _userManager.FindByEmailAsync(email);
         }
 
-        public Task<bool> IsUserInRoleAsync(UserEntity user, string roleName)
+        public async Task<bool> IsUserInRoleAsync(UserEntity user, string roleName)
         {
-            throw new NotImplementedException();
+            return await _userManager.IsInRoleAsync(user, roleName);
         }
     }
 }
