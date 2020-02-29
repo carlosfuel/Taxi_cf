@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Taxi_cf.Web.Data.Entities;
+using Taxi_cf.Web.Models;
 
 namespace Taxi_cf.Web.Helpers
 {
@@ -8,13 +9,16 @@ namespace Taxi_cf.Web.Helpers
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<UserEntity> _signInManager;
 
         public UserHelper(
             UserManager<UserEntity> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            SignInManager<UserEntity> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IdentityResult> AddUserAsync(UserEntity user, string password)
@@ -48,5 +52,23 @@ namespace Taxi_cf.Web.Helpers
         {
             return await _userManager.IsInRoleAsync(user, roleName);
         }
+
+        //-----------------------------------------------------------------------
+
+        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(
+                        model.Username,
+                        model.Password,
+                        model.RememberMe,
+                        false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        //---------------------------------------------------------------------------
     }
 }
