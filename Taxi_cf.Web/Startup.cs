@@ -19,6 +19,7 @@ namespace Taxi_cf.Web
             Configuration = configuration;
         }
 
+
         public IConfiguration Configuration { get; }
         
         public void ConfigureServices(IServiceCollection services)
