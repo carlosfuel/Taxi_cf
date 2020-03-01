@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Taxi_cf.Web.Data;
 using Taxi_cf.Web.Data.Entities;
+using Taxi_cf.Web.Helpers;
 
 namespace Taxi_cf.Web.Controllers.API
 {
@@ -11,12 +12,16 @@ namespace Taxi_cf.Web.Controllers.API
     public class TaxisController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConverterHelper _converterHelper;
 
-        public TaxisController(DataContext context)
+        public TaxisController(
+            DataContext context,
+            IConverterHelper converterHelper)
         {
             _context = context;
+            _converterHelper = converterHelper;
         }
-        
+
         // GET: api/Taxis/5
         [HttpGet("{placa}")]
         public async Task<IActionResult> GetTaxiEntity([FromRoute] string placa)
@@ -26,15 +31,21 @@ namespace Taxi_cf.Web.Controllers.API
                 return BadRequest(ModelState);
             }
 
-            TaxiEntity taxiEntity = 
-                await _context.Taxis.FirstOrDefaultAsync(t => t.Plaque ==  placa); // no funciona con valores enteros
+            placa = placa.ToUpper();
+            TaxiEntity taxiEntity = await _context.Taxis
+                .Include(t => t.User)         //USUARIO CONDUCTOR
+                .Include(t => t.Trips)         //VIAJES
+                .ThenInclude(t => t.TripDetails) //DETALLE DE LOS VIAJES
+                .Include(t => t.Trips)
+                .ThenInclude(t => t.User)      //USUARIO PASAJERO
+                .FirstOrDefaultAsync(t => t.Plaque == placa);
 
             if (taxiEntity == null)
             {
                 return NotFound();
             }
 
-            return Ok(taxiEntity);
+            return Ok(_converterHelper.ToTaxiResponse(taxiEntity));
         }
     }
 }
