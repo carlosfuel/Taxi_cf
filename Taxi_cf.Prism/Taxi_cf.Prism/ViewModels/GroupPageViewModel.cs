@@ -1,13 +1,14 @@
 ﻿using Prism.Navigation;
+
 namespace Taxi_cf.Prism.ViewModels
 {
-    public class HomePageViewModel : ViewModelBase
+    public class GroupPageViewModel : ViewModelBase
     {
-        public HomePageViewModel(
+        public GroupPageViewModel(
             INavigationService navigationService)
             : base(navigationService)
         {
-            Title = "Taxi Qualifier";
+            Title = "Admin my family group";
         }
     }
 }
