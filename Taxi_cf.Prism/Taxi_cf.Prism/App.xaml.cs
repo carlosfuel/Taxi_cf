@@ -26,6 +26,8 @@ namespace Taxi_cf.Prism
         {
             containerRegistry.Register<IGeolocatorService, GeolocatorService>();
 
+            containerRegistry.Register<IApiService, ApiService>();
+
             containerRegistry.RegisterForNavigation<NavigationPage>();
 
             containerRegistry.RegisterForNavigation<HomePage, HomePageViewModel>();
