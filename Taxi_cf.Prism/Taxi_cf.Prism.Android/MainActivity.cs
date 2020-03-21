@@ -6,6 +6,7 @@ using Plugin.Permissions;
 using Prism;
 using Prism.Ioc;
 using Syncfusion.SfBusyIndicator.XForms.Droid;
+using Syncfusion.SfRating.XForms.Droid;
 
 namespace Taxi_cf.Prism.Droid
 {
@@ -24,6 +25,9 @@ namespace Taxi_cf.Prism.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
             new SfBusyIndicatorRenderer();
+            
+            new SfRatingRenderer();
+
 
             LoadApplication(new App(new AndroidInitializer()));
         }
